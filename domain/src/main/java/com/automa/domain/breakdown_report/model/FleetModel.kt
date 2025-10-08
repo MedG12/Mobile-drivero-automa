@@ -1,0 +1,43 @@
+package com.automa.domain.breakdown_report.model
+
+import com.google.gson.annotations.SerializedName
+
+data class FleetModel(
+    val id: Int,
+    val idCompany: Int,
+    val company: String,
+    val idCarGeneralType: Int,
+    val carGeneralType: String,
+    val idCarBrands: Int,
+    val carBrands: String,
+    val idCarType: Int,
+    val carType: String,
+    val regNumber: String,
+    val doorNumber: Any,
+    val regNumberWithDoor: String,
+    val regYear: Int,
+    val manufactureYear: Int,
+    val cylCap: Int,
+    val vehicleIdNumber: String,
+    val engineNumber: String,
+    val idFuelType: Int,
+    val fuelType: String,
+    val idObd: Int,
+    val obdCode: String,
+    val createdOn: String,
+    val fuelConsumption: Double,
+    val odometer: Int,
+    val expKir: String,
+    val expPajak: String,
+    val maxTonnage: Int,
+    val mtSpeedReduction: Double,
+    val restInterval: Int,
+    val intervalBetweenRest: Int,
+    val fullTankVoltage: Double,
+    val emptyTankVoltage: Double,
+    val fuelTankCapacity: Int,
+    val fuelAlertSensitivity: Int,
+    val tkmCost: Int,
+    val emptyWeight: Int,
+    val active: Int
+)

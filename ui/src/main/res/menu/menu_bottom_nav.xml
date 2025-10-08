@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_home"
+        android:icon="@drawable/selector_ic_home"
+        android:title="@string/menu_home"
+        app:showAsAction="ifRoom"/>
+
+<!--    <item-->
+<!--        android:id="@+id/action_dashboard"-->
+<!--        android:icon="@drawable/selector_ic_dashboard"-->
+<!--        android:title="Dashboard"-->
+<!--        app:showAsAction="ifRoom"/>-->
+
+    <item
+        android:id="@+id/action_notif"
+        android:icon="@drawable/selector_ic_notification"
+        android:title="@string/menu_notif"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_account"
+        android:icon="@drawable/selector_ic_account"
+        android:title="@string/menu_account"
+        app:showAsAction="ifRoom"/>
+
+</menu>

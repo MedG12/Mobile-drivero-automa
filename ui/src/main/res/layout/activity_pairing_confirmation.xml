@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/neutral50"
+    tools:context=".driver.account.PairingConfirmationActivity">
+    <com.automa.ui.custom_component.ToolbarBasic
+        android:id="@+id/toolbar_pairing_confirmation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:toolbarText="@string/label_pairing_confirmation"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clDriverInfo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_pairing_confirmation">
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvLabelDriverInfo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Typography.Body1_Bold"
+            android:text="@string/label_driver_info"
+            android:textColor="@color/primary400"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/ivAccount"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            app:srcCompat="@drawable/ic_user"
+            app:tint="@color/primary500"
+            app:layout_constraintTop_toTopOf="@id/tvDriverName"
+            app:layout_constraintBottom_toBottomOf="@id/tvDriverName"
+            app:layout_constraintStart_toStartOf="parent"/>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvDriverName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="8dp"
+            style="@style/Typography.Body2_Regular"
+            tools:text="Beji Driver"
+            android:textColor="@color/primary400"
+            app:layout_constraintStart_toEndOf="@id/ivAccount"
+            app:layout_constraintTop_toBottomOf="@id/tvLabelDriverInfo" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvLabelIdNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            style="@style/Typography.Overline_Regular"
+            android:text="@string/label_id_number"
+            android:textColor="@color/primary300"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvDriverName"/>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvIdNumber"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Typography.Caption_Bold"
+            tools:text="3255 48878 24577 6555"
+            android:textColor="@color/primary400"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvLabelIdNumber"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvLabelDob"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            style="@style/Typography.Overline_Regular"
+            android:text="@string/label_dob"
+            android:textColor="@color/primary300"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvIdNumber"/>
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/tvDob"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            style="@style/Typography.Caption_Bold"
+            tools:text="10-05-1980"
+            android:textColor="@color/primary400"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvLabelDob"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:padding="16dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/clDriverInfo">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toTopOf="parent">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1">
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Typography.Body1_Bold"
+                    android:text="@string/label_fleet_info"
+                    android:textColor="@color/primary400" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvLabelFleetPlate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    style="@style/Typography.Body2_Regular"
+                    tools:text="B 1234 AC"
+                    app:drawableStartCompat="@drawable/ic_truck"
+                    android:textColor="@color/primary400"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    style="@style/Typography.Overline_Regular"
+                    android:text="@string/label_fleet_registration_number"
+                    app:textAllCaps="true"
+                    android:textColor="@color/primary300" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvFleetRegistrationNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    style="@style/Typography.Caption_Bold"
+                    tools:text="3255 48878 24577 6555"
+                    android:textColor="@color/primary400" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    style="@style/Typography.Overline_Regular"
+                    android:text="@string/label_fleet_vehicle_brand"
+                    app:textAllCaps="true"
+                    android:textColor="@color/primary300" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvFleetBrand"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    style="@style/Typography.Caption_Bold"
+                    tools:text="Toyota"
+                    android:textColor="@color/primary400" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    style="@style/Typography.Overline_Regular"
+                    android:text="@string/label_fleet_vehicle_type"
+                    app:textAllCaps="true"
+                    android:textColor="@color/primary300" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvFleetVehicleType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    style="@style/Typography.Caption_Bold"
+                    tools:text="Innova"
+                    android:textColor="@color/primary400" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1">
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/Typography.Overline_Regular"
+                    android:text="@string/label_fleet_registration_year"
+                    app:textAllCaps="true"
+                    android:textColor="@color/primary300" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvFleetRegistrationYear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    style="@style/Typography.Caption_Bold"
+                    tools:text="3255 48878 24577 6555"
+                    android:textColor="@color/primary400" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    style="@style/Typography.Overline_Regular"
+                    android:text="@string/label_fleet_manufacturing_year"
+                    app:textAllCaps="true"
+                    android:textColor="@color/primary300" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvFleetManufacturingYear"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    style="@style/Typography.Caption_Bold"
+                    tools:text="Toyota"
+                    android:textColor="@color/primary400" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    style="@style/Typography.Overline_Regular"
+                    android:text="@string/label_fleet_id_registered"
+                    app:textAllCaps="true"
+                    android:textColor="@color/primary300" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvFleetVehicleIdRegistered"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    style="@style/Typography.Caption_Bold"
+                    tools:text="Innova"
+                    android:textColor="@color/primary400" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    style="@style/Typography.Overline_Regular"
+                    android:text="@string/label_fleet_engine_number"
+                    app:textAllCaps="true"
+                    android:textColor="@color/primary300" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvFleetEngineNumber"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    style="@style/Typography.Caption_Bold"
+                    tools:text="Innova"
+                    android:textColor="@color/primary400" />
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    style="@style/Typography.Overline_Regular"
+                    android:text="@string/label_fleet_cylinder_capacity"
+                    app:textAllCaps="true"
+                    android:textColor="@color/primary300" />
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tvFleetCylinderCapacity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    style="@style/Typography.Caption_Bold"
+                    tools:text="Innova"
+                    android:textColor="@color/primary400" />
+            </LinearLayout>
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent">
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnPairFleet"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:text="@string/button_pair_fleet"
+            app:textAllCaps="true"
+            style="@style/ButtonPrimaryLighter"/>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

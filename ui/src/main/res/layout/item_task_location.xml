@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="6dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/ivLocation"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        app:srcCompat="@drawable/ic_location"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvLocationName"
+        app:layout_constraintBottom_toBottomOf="@id/tvLocationName"/>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvLocationName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        style="@style/Typography.Body2_SemiBold"
+        tools:text="Test"
+        android:textColor="@color/primary400"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toEndOf="@id/ivLocation" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/tvViewMap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        style="@style/Typography.Caption_Regular"
+        android:text="Lihat Map"
+        android:textColor="@color/primary400"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="@id/tvLocationName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/tvLocationName"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
