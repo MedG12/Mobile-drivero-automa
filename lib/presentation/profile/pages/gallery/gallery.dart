@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:camera/camera.dart';
-import 'package:intl/intl.dart'; // WAJIB: Tambahkan intl di pubspec.yaml
+import 'package:intl/intl.dart';
 
 // --- IMPORT SESUAIKAN DENGAN PROJECT KAMU ---
 import 'package:drivero_automa/gen/assets.gen.dart';
@@ -77,6 +77,41 @@ class _GalleryScreenState extends State<GalleryScreen> {
     setState(() {
       _filterDate = null;
     });
+  }
+
+  // --- LOGIC BARU: PREVIEW IMAGE ---
+  void _showImagePreview(BuildContext context, File imageFile, String imageName) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => Scaffold(
+          backgroundColor: Colors.black, 
+          appBar: AppBar(
+            backgroundColor: Colors.black,
+            iconTheme: const IconThemeData(color: Colors.white),
+            title: Text(
+              imageName,
+              style: const TextStyle(color: Colors.white, fontSize: 16),
+            ),
+          ),
+          body: Center(
+            // InteractiveViewer membuat gambar bisa di-ZOOM
+            child: InteractiveViewer(
+              panEnabled: true, 
+              boundaryMargin: const EdgeInsets.all(20),
+              minScale: 0.5,
+              maxScale: 4,
+              child: Hero(
+                tag: imageFile.path, // Tag harus sama dengan di _buildImageCard
+                child: Image.file(
+                  imageFile,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   @override
@@ -175,10 +210,10 @@ class _GalleryScreenState extends State<GalleryScreen> {
                     color: MyTheme.color.primary,
                     borderRadius: BorderRadius.circular(AppSetting.setWidth(10)),
                   ),
-              padding: EdgeInsets.symmetric(
-                          horizontal: AppSetting.setWidth(14),
-                          vertical: AppSetting.setHeight(6),
-              ),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: AppSetting.setWidth(14),
+                    vertical: AppSetting.setHeight(6),
+                  ),
                   child: const Icon(Icons.arrow_back, color: Colors.white, size: 20),
                 ),
               ),
@@ -225,7 +260,6 @@ class _GalleryScreenState extends State<GalleryScreen> {
                   return GestureDetector(
                     onTap: () async {
                       if (_cameras.isNotEmpty) {
-                        // ✅ FIX ROUTER: Pakai 'camera' (tanpa slash) & kirim List
                         final result = await context.pushNamed(
                           'camera', 
                           extra: _cameras, 
@@ -268,7 +302,6 @@ class _GalleryScreenState extends State<GalleryScreen> {
     images.sort((a, b) => b.lastModifiedSync().compareTo(a.lastModifiedSync()));
 
     // 2. Grouping ke Map<String, List<File>>
-    // Key: "Hari Ini", "Kemarin", "08 Jan 2026", dst.
     Map<String, List<File>> groupedImages = {};
 
     for (var image in images) {
@@ -281,7 +314,7 @@ class _GalleryScreenState extends State<GalleryScreen> {
       } else if (date.year == now.year && date.month == now.month && date.day == now.day - 1) {
         key = "Kemarin";
       } else {
-        key = DateFormat("dd MMMM yyyy", "id_ID").format(date); // Butuh inisialisasi dateformat kalau mau bahasa indo, default en_US
+        key = DateFormat("dd MMMM yyyy", "id_ID").format(date); 
       }
 
       if (groupedImages[key] == null) {
@@ -363,56 +396,70 @@ class _GalleryScreenState extends State<GalleryScreen> {
       displayName = parts.sublist(1).join('-').replaceAll(RegExp(r'\.jpe?g', caseSensitive: false), '');
     }
 
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
+    // --- FIX: Bungkus Container dengan InkWell dan Hero ---
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () {
+           // Panggil fungsi preview
+           _showImagePreview(context, imageFile, displayName);
+        },
         borderRadius: BorderRadius.circular(12),
-        boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2))],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Gambar
-          Expanded(
-            child: ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-              child: Image.file(
-                imageFile,
-                fit: BoxFit.cover,
-                errorBuilder: (_, __, ___) => const Icon(Icons.broken_image),
-              ),
-            ),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, 2))],
           ),
-          
-          // Keterangan
-          Padding(
-            padding: const EdgeInsets.all(8),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (displayId.isNotEmpty)
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(4),
-                    ),
-                    child: Text(
-                      displayId,
-                      style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.black54),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Gambar
+              Expanded(
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                  child: Hero(
+                    tag: imageFile.path, // Animasi transisi
+                    child: Image.file(
+                      imageFile,
+                      fit: BoxFit.cover,
+                      errorBuilder: (_, __, ___) => const Icon(Icons.broken_image),
                     ),
                   ),
-                const SizedBox(height: 2),
-                Text(
-                  displayName,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
                 ),
-              ],
-            ),
+              ),
+              
+              // Keterangan
+              Padding(
+                padding: const EdgeInsets.all(8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    if (displayId.isNotEmpty)
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          displayId,
+                          style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.black54),
+                        ),
+                      ),
+                    const SizedBox(height: 2),
+                    Text(
+                      displayName,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

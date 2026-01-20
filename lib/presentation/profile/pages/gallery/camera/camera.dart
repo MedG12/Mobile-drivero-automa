@@ -16,7 +16,6 @@ import 'bloc/camera_state.dart';
 import 'camera_dialog.dart';
 
 class CameraPage extends StatefulWidget {
-  // ✅ FIX: Hanya terima List Kamera. Parameter 'camera' (single) sudah dihapus.
   final List<CameraDescription> cameras;
 
   const CameraPage({
@@ -32,24 +31,26 @@ class _CameraPageState extends State<CameraPage> {
   late CameraController _cameraController;
   late Future<void> _initializeControllerFuture;
   
-  // Logic Switch Camera (Default index 0 = Belakang)
+  // Logic Switch Camera
   int _selectedCameraIndex = 0;
 
   // Timer
   Timer? _timer;
   String _timeString = "";
 
+  // ✅ VARIABLE BARU: Penanda agar lokasi diminta cuma sekali setelah kamera nyala
+  bool _isLocationRequested = false; 
+
   @override
   void initState() {
     super.initState();
-    // Init kamera pertama dari list
+    // ✅ 1. KAMERA LANGSUNG DI-INIT DI SINI (Biar cepat muncul)
     _initCamera(_selectedCameraIndex);
     _startTimer();
   }
 
   // Fungsi Inisialisasi Kamera
   void _initCamera(int cameraIndex) {
-    // Cek agar index tidak error (out of bounds)
     if (widget.cameras.isEmpty) return;
 
     _cameraController = CameraController(
@@ -62,14 +63,12 @@ class _CameraPageState extends State<CameraPage> {
 
   // Fungsi Ganti Kamera
   void _onSwitchCamera() {
-    if (widget.cameras.length < 2) return; // Cek jika cuma ada 1 kamera
+    if (widget.cameras.length < 2) return; 
 
     setState(() {
-      // Toggle index: kalau 0 jadi 1, kalau 1 jadi 0
       _selectedCameraIndex = (_selectedCameraIndex == 0) ? 1 : 0;
     });
 
-    // Re-init controller dengan index baru
     _initCamera(_selectedCameraIndex);
   }
 
@@ -93,7 +92,8 @@ class _CameraPageState extends State<CameraPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => CameraBloc()..add(InitCameraLocation()),
+      // ❌ JANGAN panggil InitCameraLocation di sini dulu. Biarkan kosong.
+      create: (context) => CameraBloc(), 
       child: BlocListener<CameraBloc, CameraState>(
         listener: (context, state) {
           if (state is CameraSaveSuccess) {
@@ -124,8 +124,21 @@ class _CameraPageState extends State<CameraPage> {
                     future: _initializeControllerFuture,
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.done) {
+                        
+                        // ✅ 🔥 LOGIC BARU: MINTA LOKASI SETELAH KAMERA READY 🔥
+                        if (!_isLocationRequested) {
+                          // Tandai biar gak dipanggil berulang-ulang
+                          _isLocationRequested = true; 
+                          
+                          // Panggil Bloc setelah frame kamera selesai dirender
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            innerContext.read<CameraBloc>().add(InitCameraLocation());
+                          });
+                        }
+
                         return CameraPreview(_cameraController);
                       }
+                      // Loading saat kamera sedang inisialisasi
                       return const Center(child: CircularProgressIndicator(color: Colors.white));
                     },
                   ),
@@ -161,7 +174,7 @@ class _CameraPageState extends State<CameraPage> {
                               ),
                             ),
 
-                            // Tombol Switch Camera (Hanya muncul jika ada >1 kamera)
+                            // Tombol Switch Camera
                             if (widget.cameras.length > 1)
                               CircleAvatar(
                                 backgroundColor: Colors.black45,
@@ -176,7 +189,7 @@ class _CameraPageState extends State<CameraPage> {
                     ),
                   ),
 
-                  // --- LAYER 4: BOTTOM CONTROL (QRIS BUTTON) ---
+                  // --- LAYER 4: BOTTOM CONTROL ---
                   Positioned(
                     bottom: 0,
                     left: 0,
@@ -194,7 +207,7 @@ class _CameraPageState extends State<CameraPage> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          // Info Waktu & Lokasi
+                          // Info Waktu
                           Text(
                             _timeString,
                             style: const TextStyle(
@@ -203,11 +216,22 @@ class _CameraPageState extends State<CameraPage> {
                                 fontSize: 14),
                           ),
                           const SizedBox(height: 4),
+
+                          // Info Lokasi (BlocBuilder)
                           BlocBuilder<CameraBloc, CameraState>(
                             buildWhen: (p, c) => c is CameraLocationUpdated,
                             builder: (context, state) {
-                              String loc = "Mencari lokasi...";
-                              if (state is CameraLocationUpdated) loc = state.address;
+                              String loc = "Menunggu Kamera..."; 
+                              
+                              // Ubah teks status sesuai kondisi
+                              if (!_isLocationRequested) {
+                                loc = "Memuat Kamera...";
+                              } else if (state is CameraInitial) {
+                                loc = "Mencari lokasi...";
+                              } else if (state is CameraLocationUpdated) {
+                                loc = state.address;
+                              }
+
                               return Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 30),
                                 child: Text(
@@ -223,7 +247,7 @@ class _CameraPageState extends State<CameraPage> {
                           
                           const SizedBox(height: 30),
 
-                          // --- TOMBOL QRIS BESAR ---
+                          // --- TOMBOL CAPTURE ---
                           InkWell(
                             onTap: () async {
                               try {
@@ -239,7 +263,7 @@ class _CameraPageState extends State<CameraPage> {
                             },
                             borderRadius: BorderRadius.circular(50),
                             child: Container(
-                              width: 90, // Ukuran Besar
+                              width: 90, 
                               height: 90,
                               decoration: BoxDecoration(
                                 shape: BoxShape.circle,
@@ -261,7 +285,7 @@ class _CameraPageState extends State<CameraPage> {
                     ),
                   ),
 
-                  // --- LAYER 5: LOADING OVERLAY ---
+                  // --- LAYER 5: LOADING OVERLAY (Saat Save) ---
                   BlocBuilder<CameraBloc, CameraState>(
                     builder: (context, state) {
                       if (state is CameraSaveLoading) {
@@ -288,8 +312,21 @@ class _CameraPageState extends State<CameraPage> {
       context,
       image,
       onSaved: (String customName) {
+        // 1. Ambil State Bloc saat ini
+        final currentState = context.read<CameraBloc>().state;
+        String locationText = "-";
+
+        if (currentState is CameraLocationUpdated) {
+          locationText = currentState.address;
+        }
+
+        // 2. Kirim Event Save
         context.read<CameraBloc>().add(
-              SaveCapturedPhoto(image: image, customName: customName),
+              SaveCapturedPhoto(
+                image: image, 
+                customName: customName,
+                location: locationText,
+              ),
             );
       },
       onCancel: () {},
